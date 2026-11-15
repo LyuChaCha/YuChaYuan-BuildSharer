@@ -23,6 +23,7 @@ public final class CraftSolver {
     private static final Set<String> ARMOUR = Set.of("HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS");
     private static final double[] TIER_MULTIPLIER = {0, 1, 1.25, 1.4};
     private static final int SLOTS = 6;
+    private static final long GRACE_MILLIS = 300;
 
     private final CraftData data;
     private final long budget;
@@ -31,6 +32,8 @@ public final class CraftSolver {
     private CraftedStats stats;
     private Recipe recipe;
     private long evaluations;
+    private int duraLow;
+    private int duraHigh;
     private long deadline;
     private Best best;
     private final Set<String> seen = new HashSet<>();
@@ -92,14 +95,14 @@ public final class CraftSolver {
             if (!ingredient.skills().contains(recipe.skill()) || ingredient.lvl() > recipe.lvlMax()) {
                 continue;
             }
-            if (!idsPossible(ingredient)) {
-                continue;
+            if (ingredient.positional()) {
+                boosters.add(ingredient);
             }
-            if (!reqsPossible(ingredient)) {
+            if (!idsPossible(ingredient) || !reqsPossible(ingredient)) {
                 continue;
             }
             if (ingredient.ids().isEmpty()) {
-                if (ingredient.positional()) {
+                if (!ingredient.positional() && (ingredient.dura() != 0 || hasReqs(ingredient))) {
                     boosters.add(ingredient);
                 }
             } else {
@@ -112,7 +115,32 @@ public final class CraftSolver {
                 required.add(id.getKey());
             }
         }
+        duraWindow();
         cover(new ArrayList<>(), required, candidates, boosters);
+    }
+
+    private void duraWindow() {
+        duraLow = Integer.MIN_VALUE;
+        duraHigh = Integer.MAX_VALUE;
+        if (stats.durability() <= 0) {
+            return;
+        }
+        int baseLow = Integer.MAX_VALUE;
+        int baseHigh = Integer.MIN_VALUE;
+        for (int t1 = 1; t1 <= 3; t1++) {
+            for (int t2 = 1; t2 <= 3; t2++) {
+                double m = multiplier(t1, t2);
+                baseLow = Math.min(baseLow, (int) Math.round(recipe.lowDura() * m));
+                baseHigh = Math.max(baseHigh, (int) Math.round(recipe.highDura() * m));
+            }
+        }
+        duraLow = stats.durability() - baseHigh - 1;
+        duraHigh = stats.durability() - baseLow + 1;
+    }
+
+    private double multiplier(int t1, int t2) {
+        return (TIER_MULTIPLIER[t1] * recipe.amount1() + TIER_MULTIPLIER[t2] * recipe.amount2())
+                / (recipe.amount1() + recipe.amount2());
     }
 
     private boolean idsPossible(Ingredient ingredient) {
@@ -123,6 +151,15 @@ public final class CraftSolver {
             }
         }
         return true;
+    }
+
+    private static boolean hasReqs(Ingredient ingredient) {
+        for (int req : ingredient.reqs()) {
+            if (req != 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean reqsPossible(Ingredient ingredient) {
@@ -186,22 +223,38 @@ public final class CraftSolver {
         pool.addAll(boosters);
         List<Ingredient> options = new ArrayList<>(pool);
         options.sort(Comparator.comparingInt(Ingredient::id));
-        fillFrom(new ArrayList<>(chosen), options, 0);
+        int minDura = Integer.MAX_VALUE;
+        int maxDura = Integer.MIN_VALUE;
+        for (Ingredient option : options) {
+            minDura = Math.min(minDura, option.dura());
+            maxDura = Math.max(maxDura, option.dura());
+        }
+        int dura = 0;
+        for (Ingredient ingredient : chosen) {
+            dura += ingredient.dura();
+        }
+        fillFrom(new ArrayList<>(chosen), options, 0, dura, minDura, maxDura);
     }
 
-    private void fillFrom(List<Ingredient> picked, List<Ingredient> options, int start) {
+    private void fillFrom(List<Ingredient> picked, List<Ingredient> options, int start, int dura,
+                          int minDura, int maxDura) {
         if (exhausted()) {
             return;
         }
-        if (picked.size() == SLOTS) {
+        int left = SLOTS - picked.size();
+        if ((long) dura + (long) left * minDura > duraHigh || (long) dura + (long) left * maxDura < duraLow) {
+            return;
+        }
+        if (left == 0) {
             if (seen.add("full:" + key(picked))) {
                 arrangements(picked);
             }
             return;
         }
         for (int i = start; i < options.size(); i++) {
-            picked.add(options.get(i));
-            fillFrom(picked, options, i);
+            Ingredient option = options.get(i);
+            picked.add(option);
+            fillFrom(picked, options, i, dura + option.dura(), minDura, maxDura);
             picked.remove(picked.size() - 1);
         }
     }
@@ -293,8 +346,7 @@ public final class CraftSolver {
         int[] tiers = null;
         for (int t1 = 1; t1 <= 3; t1++) {
             for (int t2 = 1; t2 <= 3; t2++) {
-                double m = (TIER_MULTIPLIER[t1] * recipe.amount1() + TIER_MULTIPLIER[t2] * recipe.amount2())
-                        / (recipe.amount1() + recipe.amount2());
+                double m = multiplier(t1, t2);
                 int tierViolations = 0;
                 double tierDeviation = 0;
                 if (stats.durability() >= 0) {
@@ -322,6 +374,9 @@ public final class CraftSolver {
         deviation += bestTierDeviation;
         if (best == null || violations < best.violations()
                 || violations == best.violations() && deviation < best.deviation()) {
+            if (violations == 0 && (best == null || best.violations() > 0)) {
+                deadline = Math.min(deadline, System.currentTimeMillis() + GRACE_MILLIS);
+            }
             best = new Best(violations, deviation, order.clone(), tiers);
         }
     }

@@ -53,6 +53,12 @@ subprojects {
         }
     }
 
+    tasks.register('runMain', JavaExec) {
+        group = 'verification'
+        classpath = sourceSets.test.runtimeClasspath
+        mainClass = providers.gradleProperty('main').orElse('')
+    }
+
     def testRoot = rootProject.file('common/src/test/java')
     def offlineChecks = fileTree(testRoot) { include '**/*Test.java' }.files
             .collect { testRoot.toPath().relativize(it.toPath()).toString().replace(File.separator, '.') - '.java' }
