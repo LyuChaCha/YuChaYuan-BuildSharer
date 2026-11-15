@@ -28,8 +28,8 @@ final class Badge {
     private static final int INNER = LABEL.length() * LETTER_WIDTH;
     private static final int WIDTH = INNER + EDGE_WIDTH + GAP;
 
-    private static final int[] STOPS = {0x2A8796, 0x48AEB8, 0x96DCD6};
-    private static final int INK = 0x0B1B1E;
+    private static final int[] STOPS = {0x3FA9F0, 0x6FC2F5, 0xB6E2FC};
+    private static final int INK = 0x0A1A2C;
 
     private static final Component PILL = pill();
     private static final Component TEXT = text();
