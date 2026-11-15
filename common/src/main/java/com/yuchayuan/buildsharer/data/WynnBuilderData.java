@@ -24,12 +24,15 @@ public final class WynnBuilderData {
     public static final List<String> FILES = List.of(
             "encoding_consts.json", "items.json", "atree.json", "aspects.json", "recipes.json", "ingreds.json", "tomes.json");
     public static final String MAPPINGS = "translate_mappings.json";
+    private static final String ASCENDED = "Ascended ";
+    private static final String MASTERWORK = "Masterwork ";
 
     private final String version;
     private final JsonObject constants;
     private final BuildEncoder encoder;
     private final Map<String, Integer> items = new HashMap<>();
     private final Map<String, Integer> itemsLoose = new HashMap<>();
+    private final Map<Integer, String> itemTypes = new HashMap<>();
     private final Map<String, AbilityTree> trees = new HashMap<>();
     private final Map<String, Map<String, AspectInfo>> aspects = new HashMap<>();
     private final Map<String, String> stats = new HashMap<>();
@@ -65,6 +68,19 @@ public final class WynnBuilderData {
     }
 
     public Optional<Integer> item(String name) {
+        Optional<Integer> exact = lookup(name);
+        if (exact.isPresent() || !name.startsWith(ASCENDED)) {
+            return exact;
+        }
+        String base = name.substring(ASCENDED.length());
+        return lookup(MASTERWORK + base).or(() -> lookup(base));
+    }
+
+    public Optional<String> itemType(int id) {
+        return Optional.ofNullable(itemTypes.get(id));
+    }
+
+    private Optional<Integer> lookup(String name) {
         Integer id = items.get(name);
         if (id == null) {
             id = itemsLoose.get(loose(name));
@@ -120,6 +136,9 @@ public final class WynnBuilderData {
             String display = item.has("displayName") ? item.get("displayName").getAsString() : name;
             items.putIfAbsent(display, id);
             itemsLoose.putIfAbsent(loose(display), id);
+            if (item.has("type")) {
+                itemTypes.put(id, item.get("type").getAsString());
+            }
         }
         for (JsonElement element : root.getAsJsonArray("items")) {
             JsonObject item = element.getAsJsonObject();

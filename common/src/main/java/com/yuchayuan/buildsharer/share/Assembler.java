@@ -27,6 +27,8 @@ public final class Assembler {
     public record Result(String url, List<String> unknownItems, List<String> unknownAbilities,
                          List<String> unknownStats, List<String> approximateCrafts) {}
 
+    private static final Set<String> WEAPON_TYPES = Set.of("wand", "spear", "bow", "dagger", "relik");
+
     private final WynnBuilderData data;
     private final List<String> unknownItems = new ArrayList<>();
     private final List<String> unknownAbilities = new ArrayList<>();
@@ -34,8 +36,16 @@ public final class Assembler {
     private final List<String> approximate = new ArrayList<>();
 
     public static final class MissingWeaponException extends IllegalStateException {
-        MissingWeaponException() {
-            super("weapon");
+
+        private final String name;
+
+        MissingWeaponException(String name) {
+            super(name == null ? "weapon" : name);
+            this.name = name;
+        }
+
+        public String name() {
+            return name;
         }
     }
 
@@ -48,8 +58,12 @@ public final class Assembler {
         for (Snapshot.Slot slot : snapshot.equipment()) {
             pieces.add(piece(slot));
         }
-        if (pieces.get(Build.WEAPON) instanceof Build.Empty) {
-            throw new MissingWeaponException();
+        Build.Piece weapon = pieces.get(Build.WEAPON);
+        boolean wrongType = weapon instanceof Build.Normal normal
+                && !WEAPON_TYPES.contains(data.itemType(normal.id()).orElse(""));
+        if (weapon instanceof Build.Empty || wrongType) {
+            throw new MissingWeaponException(snapshot.equipment().get(Build.WEAPON) instanceof Snapshot.Gear gear
+                    ? gear.name() : null);
         }
         AbilityTree tree = data.tree(snapshot.className())
                 .orElseThrow(() -> new IllegalStateException("no ability tree for " + snapshot.className()));

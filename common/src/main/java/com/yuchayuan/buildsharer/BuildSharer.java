@@ -125,9 +125,14 @@ public final class BuildSharer {
 
     private static void fail(Throwable error) {
         Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
-        String key = cause instanceof Assembler.MissingWeaponException ? "yuchayuan_buildsharer.no_weapon"
-                : "yuchayuan_buildsharer.failed";
-        say(Component.translatable(key, String.valueOf(cause.getMessage())).withStyle(ChatFormatting.RED));
+        if (cause instanceof Assembler.MissingWeaponException missing) {
+            say((missing.name() == null ? Component.translatable("yuchayuan_buildsharer.no_weapon")
+                    : Component.translatable("yuchayuan_buildsharer.unknown_weapon", missing.name()))
+                    .withStyle(ChatFormatting.RED));
+            return;
+        }
+        say(Component.translatable("yuchayuan_buildsharer.failed", String.valueOf(cause.getMessage()))
+                .withStyle(ChatFormatting.RED));
     }
 
     private static void say(Component message) {

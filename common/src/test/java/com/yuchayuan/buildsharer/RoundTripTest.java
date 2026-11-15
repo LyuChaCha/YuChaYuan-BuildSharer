@@ -51,6 +51,7 @@ public final class RoundTripTest {
 
         check("裝備名稱查得到", data.item("Heretic").orElse(-1) == 4991);
         check("顯示名查得到", data.item("Ionic Spark").isPresent());
+        check("昇華對到 Masterwork", data.item("Ascended Lament").orElse(-1) == 5355);
         check("技能名 I 對 1", data.tree("Warrior").flatMap(t -> t.find("Spear Proficiency I")).isPresent());
         check("技能名補 I", data.tree("Warrior").flatMap(t -> t.find("Cheaper Bash")).isPresent());
 
