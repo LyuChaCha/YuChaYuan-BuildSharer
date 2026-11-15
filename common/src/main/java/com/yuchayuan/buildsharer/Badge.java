@@ -24,8 +24,10 @@ final class Badge {
 
     private static final int EDGE_WIDTH = 2;
     private static final int LETTER_WIDTH = 6;
+    private static final int NARROW_WIDTH = 4;
+    private static final String NARROW = "I";
     private static final int GAP = 6;
-    private static final int INNER = LABEL.length() * LETTER_WIDTH;
+    private static final int INNER = inner();
     private static final int WIDTH = INNER + EDGE_WIDTH + GAP;
 
     private static final int[] STOPS = {0x3FA9F0, 0x6FC2F5, 0xB6E2FC};
@@ -57,6 +59,14 @@ final class Badge {
         out.append(Component.literal(front.toString()).setStyle(ink));
         out.append(Component.literal(space(GAP)).setStyle(ink));
         return out;
+    }
+
+    private static int inner() {
+        int width = 0;
+        for (int i = 0; i < LABEL.length(); i++) {
+            width += NARROW.indexOf(LABEL.charAt(i)) >= 0 ? NARROW_WIDTH : LETTER_WIDTH;
+        }
+        return width;
     }
 
     private static Component back(String text, int index, int count) {
