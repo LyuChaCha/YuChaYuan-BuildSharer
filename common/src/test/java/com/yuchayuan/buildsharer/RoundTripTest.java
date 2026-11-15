@@ -55,15 +55,15 @@ public final class RoundTripTest {
         check("技能名補 I", data.tree("Warrior").flatMap(t -> t.find("Cheaper Bash")).isPresent());
 
         Snapshot snapshot = new Snapshot(List.of(
-                new Snapshot.Gear("Heretic", List.of(3, 3, 3, 3)),
-                new Snapshot.Gear("Coal Fire", List.of(0, 4, 0)),
+                new Snapshot.Gear("Heretic", List.of(new Snapshot.Powder(3, 6), new Snapshot.Powder(3, 6), new Snapshot.Powder(3, 6), new Snapshot.Powder(3, 6))),
+                new Snapshot.Gear("Coal Fire", List.of(new Snapshot.Powder(0, 6), new Snapshot.Powder(4, 6), new Snapshot.Powder(0, 6))),
                 new Snapshot.Gear("Regime Busters", List.of()),
-                new Snapshot.Gear("Bleeding Soles", List.of(2)),
+                new Snapshot.Gear("Bleeding Soles", List.of(new Snapshot.Powder(2, 7), new Snapshot.Powder(2, 7))),
                 new Snapshot.Gear("Burning Brand", List.of()),
                 new Snapshot.Gear("Cannon Coin", List.of()),
                 new Snapshot.Gear("Reverence", List.of()),
                 new Snapshot.Gear("Pendulum", List.of()),
-                new Snapshot.Gear("Propitious", List.of(1, 1))),
+                new Snapshot.Gear("Propitious", List.of(new Snapshot.Powder(1, 6), new Snapshot.Powder(1, 6)))),
                 new int[] {10, 20, 0, 30, 45}, 106, "Warrior",
                 List.of(new Snapshot.NamedAspect("Aspect of Rallying Fervor", 2)),
                 List.of("Bash", "Spear Proficiency I", "Cheaper Bash"),

@@ -5,7 +5,6 @@ import com.wynntils.core.components.Models;
 import com.yuchayuan.buildsharer.data.DataSource;
 import com.yuchayuan.buildsharer.data.WynnBuilderData;
 import com.yuchayuan.buildsharer.read.CharacterReader;
-import com.yuchayuan.buildsharer.read.ItemDump;
 import com.yuchayuan.buildsharer.share.Assembler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -44,8 +43,7 @@ public final class BuildSharer {
                 .executes(context -> run(BuildSharer::share))
                 .then(LiteralArgumentBuilder.<S>literal("tomes")
                         .then(LiteralArgumentBuilder.<S>literal("on").executes(context -> run(() -> tomes(true))))
-                        .then(LiteralArgumentBuilder.<S>literal("off").executes(context -> run(() -> tomes(false)))))
-                .then(LiteralArgumentBuilder.<S>literal("dump").executes(context -> run(BuildSharer::dump)));
+                        .then(LiteralArgumentBuilder.<S>literal("off").executes(context -> run(() -> tomes(false)))));
     }
 
     private static int run(Runnable action) {
@@ -78,19 +76,6 @@ public final class BuildSharer {
                     .withStyle(ChatFormatting.GREEN));
         } catch (IOException e) {
             say(Component.translatable("yuchayuan_buildsharer.failed", e.getMessage()).withStyle(ChatFormatting.RED));
-        }
-    }
-
-    private static void dump() {
-        if (Minecraft.getInstance().player == null) {
-            return;
-        }
-        try {
-            Path file = ItemDump.write(folder());
-            say(Component.translatable("yuchayuan_buildsharer.dumped", file.toString()).withStyle(ChatFormatting.GREEN));
-        } catch (IOException | RuntimeException e) {
-            say(Component.translatable("yuchayuan_buildsharer.failed", String.valueOf(e.getMessage()))
-                    .withStyle(ChatFormatting.RED));
         }
     }
 

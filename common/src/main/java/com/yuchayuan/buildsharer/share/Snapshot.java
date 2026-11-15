@@ -18,7 +18,7 @@ public record Snapshot(List<Slot> equipment, int[] skillPoints, int level, Strin
 
     public record Nothing() implements Slot {}
 
-    public record Gear(String name, List<Integer> powders) implements Slot {
+    public record Gear(String name, List<Powder> powders) implements Slot {
         public Gear {
             powders = List.copyOf(powders);
         }
@@ -26,7 +26,7 @@ public record Snapshot(List<Slot> equipment, int[] skillPoints, int level, Strin
 
     public record Crafted(String name, String type, int level, String attackSpeed, int durability,
                           int health, int damageLow, int damageHigh, int[] reqs,
-                          Map<String, Integer> apiIds, List<Integer> powders) implements Slot {
+                          Map<String, Integer> apiIds, List<Powder> powders) implements Slot {
         public Crafted {
             reqs = reqs.clone();
             apiIds = Map.copyOf(apiIds);
@@ -35,4 +35,6 @@ public record Snapshot(List<Slot> equipment, int[] skillPoints, int level, Strin
     }
 
     public record NamedAspect(String name, int tier) {}
+
+    public record Powder(int element, int tier) {}
 }

@@ -13,6 +13,5 @@
   "yuchayuan_buildsharer.no_weapon": "Hold your weapon (or keep it in your hotbar) and try again.",
   "yuchayuan_buildsharer.failed": "Could not read your build: %s",
   "yuchayuan_buildsharer.tomes_on": "Tomes will be included in the link.",
-  "yuchayuan_buildsharer.tomes_off": "Tomes will be left out of the link.",
-  "yuchayuan_buildsharer.dumped": "Equipped item tooltips saved to %s"
+  "yuchayuan_buildsharer.tomes_off": "Tomes will be left out of the link."
 }

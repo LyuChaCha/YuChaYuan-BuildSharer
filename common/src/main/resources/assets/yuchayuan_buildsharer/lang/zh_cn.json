@@ -13,6 +13,5 @@
   "yuchayuan_buildsharer.no_weapon": "请手持武器（或放在快捷栏）再试一次。",
   "yuchayuan_buildsharer.failed": "读取配装失败：%s",
   "yuchayuan_buildsharer.tomes_on": "之后的链接会包含书（Tome）。",
-  "yuchayuan_buildsharer.tomes_off": "之后的链接不包含书（Tome）。",
-  "yuchayuan_buildsharer.dumped": "身上装备的说明已保存到 %s"
+  "yuchayuan_buildsharer.tomes_off": "之后的链接不包含书（Tome）。"
 }

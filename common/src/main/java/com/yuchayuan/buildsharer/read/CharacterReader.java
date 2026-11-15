@@ -16,11 +16,14 @@ import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.utils.wynn.ContainerUtils;
+import com.yuchayuan.buildsharer.share.PowderText;
 import com.yuchayuan.buildsharer.share.Snapshot;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -92,6 +95,7 @@ public final class CharacterReader {
             return;
         }
         try {
+            ContainerUtils.closeBackgroundContainer();
             ClassType playerClass = Models.Character.getClassType();
             GearReader.Result gear = GearReader.read(playerClass);
             ClassType resolved = playerClass == null || playerClass == ClassType.NONE ? gear.weaponClass() : playerClass;
@@ -105,9 +109,31 @@ public final class CharacterReader {
                         Models.Aspect.getAspectTierByName(n).orElse(1))));
             }
             int level = Models.CombatXp.getCombatLevel().current();
-            result.complete(new Snapshot(gear.equipment(), points, level, resolved.getName(), aspects, abilities, tomes));
+            String className = resolved.getName();
+            TooltipPages.all(new ArrayList<>(gear.menuSlots().values())).whenComplete((pages, error) -> {
+                if (error != null) {
+                    result.completeExceptionally(error);
+                    return;
+                }
+                Map<Integer, List<Snapshot.Powder>> powders = new HashMap<>();
+                for (Map.Entry<Integer, List<List<String>>> entry : pages.entrySet()) {
+                    powders.put(entry.getKey(), powdersOf(entry.getValue()));
+                }
+                result.complete(new Snapshot(gear.withPowders(powders).equipment(), points, level, className,
+                        aspects, abilities, tomes));
+            });
         } catch (RuntimeException e) {
             result.completeExceptionally(e);
         }
+    }
+
+    private static List<Snapshot.Powder> powdersOf(List<List<String>> pages) {
+        for (List<String> page : pages) {
+            List<Snapshot.Powder> found = PowderText.parse(page);
+            if (!found.isEmpty()) {
+                return found;
+            }
+        }
+        return List.of();
     }
 }

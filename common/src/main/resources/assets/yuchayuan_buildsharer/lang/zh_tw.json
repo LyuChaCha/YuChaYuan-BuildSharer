@@ -13,6 +13,5 @@
   "yuchayuan_buildsharer.no_weapon": "請手持武器（或放在快捷欄）再試一次。",
   "yuchayuan_buildsharer.failed": "讀取配裝失敗：%s",
   "yuchayuan_buildsharer.tomes_on": "之後的網址會包含書（Tome）。",
-  "yuchayuan_buildsharer.tomes_off": "之後的網址不包含書（Tome）。",
-  "yuchayuan_buildsharer.dumped": "身上裝備的說明已存到 %s"
+  "yuchayuan_buildsharer.tomes_off": "之後的網址不包含書（Tome）。"
 }

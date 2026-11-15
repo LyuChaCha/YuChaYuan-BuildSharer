@@ -18,7 +18,6 @@ import java.util.Set;
 
 public final class Assembler {
 
-    public static final int POWDER_TIER = 6;
     private static final List<String> TOME_SLOTS = List.of("weaponTome", "weaponTome",
             "armorTome", "armorTome", "armorTome", "armorTome", "guildTome", "lootrunTome",
             "gatherXpTome", "gatherXpTome", "dungeonXpTome", "dungeonXpTome", "mobXpTome", "mobXpTome");
@@ -129,10 +128,10 @@ public final class Assembler {
         return new Build.Crafted(craft.get(), powders(crafted.powders()));
     }
 
-    private List<Integer> powders(List<Integer> elements) {
-        List<Integer> ids = new ArrayList<>(elements.size());
-        for (int element : elements) {
-            ids.add(BuildEncoder.powderId(element, POWDER_TIER, data.constants()));
+    private List<Integer> powders(List<Snapshot.Powder> powders) {
+        List<Integer> ids = new ArrayList<>(powders.size());
+        for (Snapshot.Powder powder : powders) {
+            ids.add(BuildEncoder.powderId(powder.element(), powder.tier(), data.constants()));
         }
         return ids;
     }
