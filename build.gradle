@@ -1,0 +1,74 @@
+plugins {
+    id 'fabric-loom' version '1.13-SNAPSHOT' apply false
+    id 'net.neoforged.moddev' version '2.0.148' apply false
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    version = rootProject.mod_version
+    group = rootProject.maven_group
+
+    base {
+        archivesName = "${rootProject.archives_base_name}-${project.name}"
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    sourceSets {
+        main {
+            java.srcDir rootProject.file('common/src/main/java')
+            resources.srcDir rootProject.file('common/src/main/resources')
+        }
+        test {
+            java.srcDir rootProject.file('common/src/test/java')
+            resources.srcDir rootProject.file('common/src/test/resources')
+            compileClasspath += main.compileClasspath + main.output
+            runtimeClasspath += main.compileClasspath + main.output
+        }
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.release = 21
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(JavaExec).configureEach {
+        jvmArgs('-Dfile.encoding=UTF-8', '-Dstdout.encoding=UTF-8', '-Dstderr.encoding=UTF-8')
+    }
+
+    tasks.named('test') { enabled = false }
+
+    jar {
+        def baseName = rootProject.archives_base_name
+        from(rootProject.file('LICENSE')) {
+            rename { "${it}_${baseName}" }
+        }
+    }
+
+    def testRoot = rootProject.file('common/src/test/java')
+    def offlineChecks = fileTree(testRoot) { include '**/*Test.java' }.files
+            .collect { testRoot.toPath().relativize(it.toPath()).toString().replace(File.separator, '.') - '.java' }
+            .sort()
+
+    tasks.register('offlineChecks') {
+        group = 'verification'
+    }
+    tasks.named('check') { dependsOn 'offlineChecks' }
+
+    offlineChecks.each { testClass ->
+        def task = tasks.register(testClass.tokenize('.').last(), JavaExec) {
+            group = 'verification'
+            classpath = sourceSets.test.runtimeClasspath
+            mainClass = testClass
+        }
+        tasks.named('offlineChecks') { dependsOn task }
+    }
+}

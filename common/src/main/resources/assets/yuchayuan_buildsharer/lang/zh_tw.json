@@ -1,0 +1,15 @@
+{
+  "key.yuchayuan_buildsharer.share": "分享配裝到 WynnBuilder",
+  "key.category.yuchayuan_buildsharer.main": "YuChaYuan BuildSharer",
+  "yuchayuan_buildsharer.reading": "正在讀取角色資料……接下來幾秒請不要開背包。",
+  "yuchayuan_buildsharer.busy": "正在讀取角色資料，請稍候。",
+  "yuchayuan_buildsharer.not_in_world": "請先用角色進入 Wynncraft 的世界。",
+  "yuchayuan_buildsharer.done": "配裝網址已複製到剪貼簿：%s",
+  "yuchayuan_buildsharer.open": "在 WynnBuilder 開啟",
+  "yuchayuan_buildsharer.unknown_items": "WynnBuilder 找不到，已留空：%s",
+  "yuchayuan_buildsharer.unknown_abilities": "WynnBuilder 找不到的技能：%s",
+  "yuchayuan_buildsharer.unknown_stats": "WynnBuilder 不認得的製作物屬性：%s",
+  "yuchayuan_buildsharer.approximate_crafts": "找不到完全吻合的配方，用最接近的：%s",
+  "yuchayuan_buildsharer.no_weapon": "請手持武器（或放在快捷欄）再試一次。",
+  "yuchayuan_buildsharer.failed": "讀取配裝失敗：%s"
+}

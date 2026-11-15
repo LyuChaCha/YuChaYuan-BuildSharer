@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "AGPL-3.0-or-later"
+
+[[mods]]
+modId = "yuchayuan_buildsharer"
+version = "${version}"
+displayName = "YuChaYuan BuildSharer"
+authors = "LyuChaCha"
+description = "Turns your current Wynncraft character into a WynnBuilder link: skill points, ability tree, equipped and crafted gear."
+
+[[dependencies.yuchayuan_buildsharer]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.11]"
+side = "CLIENT"
+
+[[dependencies.yuchayuan_buildsharer]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.11.23-beta,)"
+side = "CLIENT"
+
+[[dependencies.yuchayuan_buildsharer]]
+modId = "wynntils"
+type = "required"
+versionRange = "[4.2.0,5.0.0)"
+side = "CLIENT"

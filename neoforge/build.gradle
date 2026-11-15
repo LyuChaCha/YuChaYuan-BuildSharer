@@ -1,0 +1,23 @@
+apply plugin: 'net.neoforged.moddev'
+
+neoForge {
+    version = rootProject.neoforge_version
+
+    mods {
+        "${rootProject.mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+dependencies {
+    compileOnly fileTree(dir: rootProject.file('libs'), include: ['wynntils-*-neoforge+*.jar'])
+}
+
+processResources {
+    def modVersion = project.version
+    inputs.property 'version', modVersion
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand(['version': modVersion])
+    }
+}
