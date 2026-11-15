@@ -11,8 +11,8 @@
   "yuchayuan_buildsharer.unknown_stats": "Crafted stats WynnBuilder does not know: %s",
   "yuchayuan_buildsharer.approximate_crafts": "No exact recipe found, using the closest one: %s",
   "yuchayuan_buildsharer.no_weapon": "Hold your weapon (or keep it in your hotbar) and try again.",
+  "yuchayuan_buildsharer.unknown_weapon": "WynnBuilder does not know this weapon: %s",
   "yuchayuan_buildsharer.failed": "Could not read your build: %s",
   "yuchayuan_buildsharer.tomes_on": "Tomes will be included in the link.",
-  "yuchayuan_buildsharer.tomes_off": "Tomes will be left out of the link.",
-  "yuchayuan_buildsharer.unknown_weapon": "WynnBuilder does not know this weapon: %s"
+  "yuchayuan_buildsharer.tomes_off": "Tomes will be left out of the link."
 }

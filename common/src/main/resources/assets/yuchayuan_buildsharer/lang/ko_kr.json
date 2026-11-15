@@ -1,0 +1,18 @@
+{
+  "key.yuchayuan_buildsharer.share": "WynnBuilder로 빌드 공유",
+  "key.category.yuchayuan_buildsharer.main": "YuChaYuan BuildSharer",
+  "yuchayuan_buildsharer.reading": "캐릭터 정보를 읽는 중... 몇 초 동안 인벤토리를 열지 마세요.",
+  "yuchayuan_buildsharer.busy": "이미 캐릭터 정보를 읽는 중입니다. 잠시 기다려 주세요.",
+  "yuchayuan_buildsharer.not_in_world": "먼저 캐릭터로 Wynncraft 월드에 들어가세요.",
+  "yuchayuan_buildsharer.done": "빌드 링크를 클립보드에 복사했습니다: %s",
+  "yuchayuan_buildsharer.open": "WynnBuilder에서 열기",
+  "yuchayuan_buildsharer.unknown_items": "WynnBuilder에서 찾을 수 없어 비워 두었습니다: %s",
+  "yuchayuan_buildsharer.unknown_abilities": "WynnBuilder에서 찾을 수 없는 능력: %s",
+  "yuchayuan_buildsharer.unknown_stats": "WynnBuilder가 인식하지 못하는 제작 장비 능력치: %s",
+  "yuchayuan_buildsharer.approximate_crafts": "정확히 일치하는 레시피가 없어 가장 가까운 것을 사용했습니다: %s",
+  "yuchayuan_buildsharer.no_weapon": "무기를 손에 들거나 핫바에 넣은 뒤 다시 시도하세요.",
+  "yuchayuan_buildsharer.unknown_weapon": "WynnBuilder가 이 무기를 인식하지 못합니다: %s",
+  "yuchayuan_buildsharer.failed": "빌드를 읽지 못했습니다: %s",
+  "yuchayuan_buildsharer.tomes_on": "링크에 서적(Tome)을 포함합니다.",
+  "yuchayuan_buildsharer.tomes_off": "링크에 서적(Tome)을 포함하지 않습니다."
+}

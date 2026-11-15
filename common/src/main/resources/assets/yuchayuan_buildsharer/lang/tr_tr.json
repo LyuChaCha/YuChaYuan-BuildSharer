@@ -1,0 +1,18 @@
+{
+  "key.yuchayuan_buildsharer.share": "Build'i WynnBuilder'da paylaş",
+  "key.category.yuchayuan_buildsharer.main": "YuChaYuan BuildSharer",
+  "yuchayuan_buildsharer.reading": "Karakterin okunuyor... birkaç saniye envanterini açma.",
+  "yuchayuan_buildsharer.busy": "Karakterin zaten okunuyor, lütfen bekle.",
+  "yuchayuan_buildsharer.not_in_world": "Önce bir karakterle Wynncraft dünyasına gir.",
+  "yuchayuan_buildsharer.done": "Build bağlantısı panoya kopyalandı: %s",
+  "yuchayuan_buildsharer.open": "WynnBuilder'da aç",
+  "yuchayuan_buildsharer.unknown_items": "WynnBuilder'da bulunamadı, boş bırakıldı: %s",
+  "yuchayuan_buildsharer.unknown_abilities": "WynnBuilder'da bulunamayan yetenekler: %s",
+  "yuchayuan_buildsharer.unknown_stats": "WynnBuilder'ın tanımadığı üretilmiş eşya özellikleri: %s",
+  "yuchayuan_buildsharer.approximate_crafts": "Tam eşleşen tarif bulunamadı, en yakını kullanıldı: %s",
+  "yuchayuan_buildsharer.no_weapon": "Silahını eline al (ya da hızlı erişim çubuğuna koy) ve tekrar dene.",
+  "yuchayuan_buildsharer.unknown_weapon": "WynnBuilder bu silahı tanımıyor: %s",
+  "yuchayuan_buildsharer.failed": "Build okunamadı: %s",
+  "yuchayuan_buildsharer.tomes_on": "Bağlantıya tome'lar eklenecek.",
+  "yuchayuan_buildsharer.tomes_off": "Bağlantıya tome'lar eklenmeyecek."
+}

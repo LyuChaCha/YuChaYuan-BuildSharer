@@ -1,0 +1,18 @@
+{
+  "key.yuchayuan_buildsharer.share": "Compartir build en WynnBuilder",
+  "key.category.yuchayuan_buildsharer.main": "YuChaYuan BuildSharer",
+  "yuchayuan_buildsharer.reading": "Leyendo tu personaje... no abras el inventario durante unos segundos.",
+  "yuchayuan_buildsharer.busy": "Ya se está leyendo tu personaje, espera un momento.",
+  "yuchayuan_buildsharer.not_in_world": "Primero entra a un mundo de Wynncraft con un personaje.",
+  "yuchayuan_buildsharer.done": "Enlace de la build copiado al portapapeles: %s",
+  "yuchayuan_buildsharer.open": "Abrir en WynnBuilder",
+  "yuchayuan_buildsharer.unknown_items": "WynnBuilder no los encuentra, se dejan vacíos: %s",
+  "yuchayuan_buildsharer.unknown_abilities": "Habilidades que WynnBuilder no encuentra: %s",
+  "yuchayuan_buildsharer.unknown_stats": "Estadísticas de objetos fabricados que WynnBuilder no reconoce: %s",
+  "yuchayuan_buildsharer.approximate_crafts": "No hay una receta exacta, se usa la más cercana: %s",
+  "yuchayuan_buildsharer.no_weapon": "Sostén tu arma (o tenla en la barra rápida) e inténtalo de nuevo.",
+  "yuchayuan_buildsharer.unknown_weapon": "WynnBuilder no reconoce esta arma: %s",
+  "yuchayuan_buildsharer.failed": "No se pudo leer tu build: %s",
+  "yuchayuan_buildsharer.tomes_on": "El enlace incluirá los tomos.",
+  "yuchayuan_buildsharer.tomes_off": "El enlace no incluirá los tomos."
+}

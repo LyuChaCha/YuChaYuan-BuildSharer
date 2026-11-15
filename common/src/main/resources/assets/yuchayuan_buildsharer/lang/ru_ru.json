@@ -1,0 +1,18 @@
+{
+  "key.yuchayuan_buildsharer.share": "Поделиться билдом в WynnBuilder",
+  "key.category.yuchayuan_buildsharer.main": "YuChaYuan BuildSharer",
+  "yuchayuan_buildsharer.reading": "Считываю персонажа... не открывайте инвентарь несколько секунд.",
+  "yuchayuan_buildsharer.busy": "Персонаж уже считывается, подождите.",
+  "yuchayuan_buildsharer.not_in_world": "Сначала войдите в мир Wynncraft персонажем.",
+  "yuchayuan_buildsharer.done": "Ссылка на билд скопирована в буфер обмена: %s",
+  "yuchayuan_buildsharer.open": "Открыть в WynnBuilder",
+  "yuchayuan_buildsharer.unknown_items": "Не найдено в WynnBuilder, оставлено пустым: %s",
+  "yuchayuan_buildsharer.unknown_abilities": "Способности, которых нет в WynnBuilder: %s",
+  "yuchayuan_buildsharer.unknown_stats": "Характеристики крафтовых предметов, неизвестные WynnBuilder: %s",
+  "yuchayuan_buildsharer.approximate_crafts": "Точный рецепт не найден, использован ближайший: %s",
+  "yuchayuan_buildsharer.no_weapon": "Возьмите оружие в руку (или положите на панель быстрого доступа) и попробуйте снова.",
+  "yuchayuan_buildsharer.unknown_weapon": "WynnBuilder не знает это оружие: %s",
+  "yuchayuan_buildsharer.failed": "Не удалось считать билд: %s",
+  "yuchayuan_buildsharer.tomes_on": "Тома будут включены в ссылку.",
+  "yuchayuan_buildsharer.tomes_off": "Тома не будут включены в ссылку."
+}

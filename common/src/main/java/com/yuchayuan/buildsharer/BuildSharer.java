@@ -72,24 +72,24 @@ public final class BuildSharer {
     private static void tomes(boolean include) {
         try {
             settings().includeTomes(include);
-            say(Component.translatable(include ? "yuchayuan_buildsharer.tomes_on" : "yuchayuan_buildsharer.tomes_off")
+            say(Lang.t(include ? "tomes_on" : "tomes_off")
                     .withStyle(ChatFormatting.GREEN));
         } catch (IOException e) {
-            say(Component.translatable("yuchayuan_buildsharer.failed", e.getMessage()).withStyle(ChatFormatting.RED));
+            say(Lang.t("failed", e.getMessage()).withStyle(ChatFormatting.RED));
         }
     }
 
     public static void share() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || !Models.WorldState.onWorld()) {
-            say(Component.translatable("yuchayuan_buildsharer.not_in_world").withStyle(ChatFormatting.RED));
+            say(Lang.t("not_in_world").withStyle(ChatFormatting.RED));
             return;
         }
         if (!RUNNING.compareAndSet(false, true)) {
-            say(Component.translatable("yuchayuan_buildsharer.busy").withStyle(ChatFormatting.YELLOW));
+            say(Lang.t("busy").withStyle(ChatFormatting.YELLOW));
             return;
         }
-        say(Component.translatable("yuchayuan_buildsharer.reading").withStyle(ChatFormatting.GRAY));
+        say(Lang.t("reading").withStyle(ChatFormatting.GRAY));
         CompletableFuture<WynnBuilderData> data = source().get();
         CharacterReader.read(settings().includeTomes())
                 .thenCombineAsync(data, (snapshot, loaded) -> new Assembler(loaded).assemble(snapshot))
@@ -109,37 +109,36 @@ public final class BuildSharer {
                 .withColor(ChatFormatting.AQUA)
                 .withUnderlined(true)
                 .withClickEvent(new ClickEvent.OpenUrl(URI.create(result.url())))
-                .withHoverEvent(new HoverEvent.ShowText(Component.translatable("yuchayuan_buildsharer.open"))));
-        say(Component.translatable("yuchayuan_buildsharer.done", link).withStyle(ChatFormatting.GREEN));
-        warn("yuchayuan_buildsharer.unknown_items", result.unknownItems());
-        warn("yuchayuan_buildsharer.unknown_abilities", result.unknownAbilities());
-        warn("yuchayuan_buildsharer.unknown_stats", result.unknownStats());
-        warn("yuchayuan_buildsharer.approximate_crafts", result.approximateCrafts());
+                .withHoverEvent(new HoverEvent.ShowText(Lang.t("open"))));
+        say(Lang.t("done", link).withStyle(ChatFormatting.GREEN));
+        warn("unknown_items", result.unknownItems());
+        warn("unknown_abilities", result.unknownAbilities());
+        warn("unknown_stats", result.unknownStats());
+        warn("approximate_crafts", result.approximateCrafts());
     }
 
     private static void warn(String key, List<String> names) {
         if (!names.isEmpty()) {
-            say(Component.translatable(key, String.join(", ", names)).withStyle(ChatFormatting.YELLOW));
+            say(Lang.t(key, String.join(", ", names)).withStyle(ChatFormatting.YELLOW));
         }
     }
 
     private static void fail(Throwable error) {
         Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
         if (cause instanceof Assembler.MissingWeaponException missing) {
-            say((missing.name() == null ? Component.translatable("yuchayuan_buildsharer.no_weapon")
-                    : Component.translatable("yuchayuan_buildsharer.unknown_weapon", missing.name()))
+            say((missing.name() == null ? Lang.t("no_weapon")
+                    : Lang.t("unknown_weapon", missing.name()))
                     .withStyle(ChatFormatting.RED));
             return;
         }
-        say(Component.translatable("yuchayuan_buildsharer.failed", String.valueOf(cause.getMessage()))
+        say(Lang.t("failed", String.valueOf(cause.getMessage()))
                 .withStyle(ChatFormatting.RED));
     }
 
     private static void say(Component message) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            mc.player.displayClientMessage(Component.literal("[BuildSharer] ").withStyle(ChatFormatting.DARK_AQUA)
-                    .append(message), false);
+            mc.player.displayClientMessage(Badge.prefixed(message), false);
         }
     }
 }

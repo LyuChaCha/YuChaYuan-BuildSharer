@@ -1,26 +1,49 @@
 # YuChaYuan BuildSharer
 
-把目前的 Wynncraft 角色變成一條 [WynnBuilder](https://wynnbuilder.github.io/builder/) 網址：技能點、技能樹、身上裝備、crafted 裝備、等級、Aspect，可選擇是否包含書（Tome）。
+Turns your current Wynncraft character into one [WynnBuilder](https://wynnbuilder.github.io/builder/) link: equipped gear, crafted gear, powders, skill points, ability tree, level, aspects, and optionally tomes.
 
-Turns your current Wynncraft character into a single WynnBuilder link: skill points, ability tree, equipped gear, crafted gear, level, aspects, and optionally tomes.
+Run `/buildsharer` (or bind **Share build to WynnBuilder** in Controls). The mod opens your character menu in the background for a few seconds, then posts the link in chat and copies it to your clipboard. Keep your inventory closed while it reads.
 
-## 使用 / Usage
+## What it reads
 
-- `/buildsharer`：讀取角色並產生網址（會短暫打開指南針選單，期間請不要開背包）。
-- `/buildsharer tomes on|off`：網址要不要包含書。
-- 按鍵設定裡也可以綁「分享配裝到 WynnBuilder」。
+| Part | How |
+|---|---|
+| Gear | Armour, accessories and the weapon in your hand (or hotbar). Ascended items map to WynnBuilder's Masterwork versions. |
+| Crafted gear | Rebuilt as a real WynnBuilder crafter recipe. The game does not store ingredients, so the mod searches recipes, ingredients, material tiers and ingredient positions until skill requirements match exactly and every stat and the durability fall inside their ranges. If nothing matches exactly, it uses the closest recipe and tells you which item. |
+| Powders | Element and tier of every slot, read from the item's second tooltip page. Nothing to configure. |
+| Skill points | Points you assigned, from the character menu. |
+| Ability tree | Every unlocked node. |
+| Aspects | The aspects Wynntils has seen you equip. |
+| Tomes | Optional: `/buildsharer tomes on` or `/buildsharer tomes off` (off by default). |
 
-Crafted 裝備會轉成 WynnBuilder crafter 的配方：遊戲物品沒有記錄材料，模組依類型、等級、需求點數、詞條與耐久反推最吻合的材料組合。
+## How it differs from WynnBuild
 
-## 需求 / Requirements
+[WynnBuild](https://github.com/pozgerab/WynnBuild) does the same job. The differences:
 
-- Minecraft 1.21.11，Fabric（需要 Fabric API）或 NeoForge
+| | WynnBuild | BuildSharer |
+|---|---|---|
+| Loaders | Fabric | Fabric and NeoForge |
+| Crafted gear | Custom item with copied stats | Recipe reverse-engineered for WynnBuilder's crafter |
+| Powder tier | One default tier you set | Read from each item |
+| Language | English | English by default; follows [WynnChaYuan](https://github.com/LyuChaCha/WynnChaYuan)'s language when it is installed (8 languages) |
+
+## Requirements
+
+- Minecraft 1.21.11 with Fabric (and Fabric API) or NeoForge
 - [Wynntils](https://modrinth.com/mod/wynntils)
 
-## 建置 / Building
+## Languages
 
-把 Wynntils 的 fabric 與 neoforge jar 放進 `libs/`，再執行 `gradle build`。WynnBuilder 的資料在執行時從 wynnbuilder.github.io 下載並快取在 `config/yuchayuan_buildsharer`。
+Messages are in English unless [WynnChaYuan](https://github.com/LyuChaCha/WynnChaYuan) is installed, in which case they follow the language you pick in WynnChaYuan (or your Minecraft language if you did not pick one). Available: English, 繁體中文, 简体中文, 日本語, 한국어, Русский, Español, Türkçe.
 
-## 授權 / License
+## Building
+
+Put the Wynntils Fabric and NeoForge jars in `libs/`, then run `gradle build`. WynnBuilder's data is downloaded from wynnbuilder.github.io the first time you share a build and cached in `config/yuchayuan_buildsharer`.
+
+## 中文說明
+
+`/buildsharer` 會把目前角色的裝備、crafted、粉末、技能點、技能樹、等級、Aspect（可選擇是否包含書）轉成一條 WynnBuilder 網址。Crafted 會反推出 crafter 配方，粉末階級自動讀取，支援 Fabric 與 NeoForge。訊息預設英文；裝了 WynnChaYuan 會跟著它的語言切換。
+
+## License
 
 AGPL-3.0-or-later
