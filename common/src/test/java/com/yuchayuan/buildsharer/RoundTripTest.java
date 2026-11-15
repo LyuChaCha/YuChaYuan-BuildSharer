@@ -66,7 +66,8 @@ public final class RoundTripTest {
                 new Snapshot.Gear("Propitious", List.of(1, 1))),
                 new int[] {10, 20, 0, 30, 45}, 106, "Warrior",
                 List.of(new Snapshot.NamedAspect("Aspect of Rallying Fervor", 2)),
-                List.of("Bash", "Spear Proficiency I", "Cheaper Bash"));
+                List.of("Bash", "Spear Proficiency I", "Cheaper Bash"),
+                List.of("Abyssal Tome of Combat Mastery III", "Blooming Tome of Defensive Mastery III"));
         Assembler.Result result = new Assembler(data).assemble(snapshot);
         System.out.println("      配裝網址：" + result.url());
         check("沒有找不到的裝備", result.unknownItems().isEmpty());
@@ -80,7 +81,7 @@ public final class RoundTripTest {
                 new Build.Empty(), new Build.Empty(), new Build.Empty(), new Build.Empty(),
                 new Build.Crafted(new Craft(627, true, new int[] {3, 3},
                         List.of(4000, 4000, 4000, 4000, 4000, 4000), "FAST", true), List.of())));
-        Build build = new Build(pieces, null, 105, List.of(), data.tree("Warrior").orElseThrow(), Set.of());
+        Build build = new Build(pieces, null, 105, List.of(), List.of(), data.tree("Warrior").orElseThrow(), Set.of());
         System.out.println("      含製作物的配裝網址：" + data.encoder().url(build));
     }
 

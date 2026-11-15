@@ -35,7 +35,7 @@ public final class BuildEncoder {
         out.append(BINARY_FLAG, 6);
         out.append(version, VERSION_WIDTH);
         equipment(build, out);
-        flag(out, "TOMES_FLAG", "NO_TOMES");
+        tomes(build.tomes(), out);
         skillPoints(build.skillPoints(), out);
         level(build.level(), out);
         aspects(build.aspects(), out);
@@ -112,6 +112,24 @@ public final class BuildEncoder {
             byElement.computeIfAbsent(powder / tiers, e -> new ArrayList<>()).add(powder);
         }
         return new ArrayList<>(byElement.values());
+    }
+
+    private void tomes(List<Integer> tomes, Bits out) {
+        if (tomes.stream().allMatch(id -> id == Build.NO_TOME)) {
+            flag(out, "TOMES_FLAG", "NO_TOMES");
+            return;
+        }
+        flag(out, "TOMES_FLAG", "HAS_TOMES");
+        int slots = number("TOME_NUM");
+        for (int i = 0; i < slots; i++) {
+            int id = i < tomes.size() ? tomes.get(i) : Build.NO_TOME;
+            if (id == Build.NO_TOME) {
+                flag(out, "TOME_SLOT_FLAG", "UNUSED");
+            } else {
+                flag(out, "TOME_SLOT_FLAG", "USED");
+                out.append(id, number("TOME_ID_BITLEN"));
+            }
+        }
     }
 
     private void skillPoints(int[] points, Bits out) {

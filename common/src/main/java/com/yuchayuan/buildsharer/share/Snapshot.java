@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 public record Snapshot(List<Slot> equipment, int[] skillPoints, int level, String className,
-                       List<NamedAspect> aspects, List<String> abilities) {
+                       List<NamedAspect> aspects, List<String> abilities, List<String> tomes) {
 
     public Snapshot {
         equipment = List.copyOf(equipment);
         aspects = List.copyOf(aspects);
         abilities = List.copyOf(abilities);
+        tomes = List.copyOf(tomes);
         skillPoints = skillPoints == null ? null : skillPoints.clone();
     }
 

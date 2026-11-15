@@ -8,6 +8,7 @@ import com.yuchayuan.buildsharer.encode.Build;
 import com.yuchayuan.buildsharer.encode.BuildEncoder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,9 @@ import java.util.Set;
 public final class Assembler {
 
     public static final int POWDER_TIER = 6;
+    private static final List<String> TOME_SLOTS = List.of("weaponTome", "weaponTome",
+            "armorTome", "armorTome", "armorTome", "armorTome", "guildTome", "lootrunTome",
+            "gatherXpTome", "gatherXpTome", "dungeonXpTome", "dungeonXpTome", "mobXpTome", "mobXpTome");
     private static final long SOLVER_BUDGET = 4_000_000;
     private static final long SOLVER_MILLIS = 4_000;
 
@@ -64,9 +68,28 @@ public final class Assembler {
             data.aspect(snapshot.className(), aspect.name()).ifPresent(info ->
                     aspects.add(new Build.Aspect(info.id(), Math.max(1, Math.min(info.tiers(), aspect.tier())))));
         }
-        Build build = new Build(pieces, snapshot.skillPoints(), snapshot.level(), aspects, tree, abilities);
+        Build build = new Build(pieces, snapshot.skillPoints(), snapshot.level(), aspects,
+                tomes(snapshot.tomes()), tree, abilities);
         return new Result(data.encoder().url(build), List.copyOf(unknownItems), List.copyOf(unknownAbilities),
                 List.copyOf(unknownStats), List.copyOf(approximate));
+    }
+
+    private List<Integer> tomes(List<String> names) {
+        List<Integer> slots = new ArrayList<>(Collections.nCopies(TOME_SLOTS.size(), Build.NO_TOME));
+        for (String name : names) {
+            Optional<WynnBuilderData.TomeInfo> tome = data.tome(name);
+            if (tome.isEmpty()) {
+                unknownItems.add(name);
+                continue;
+            }
+            for (int i = 0; i < TOME_SLOTS.size(); i++) {
+                if (TOME_SLOTS.get(i).equals(tome.get().type()) && slots.get(i) == Build.NO_TOME) {
+                    slots.set(i, tome.get().id());
+                    break;
+                }
+            }
+        }
+        return slots;
     }
 
     private Build.Piece piece(Snapshot.Slot slot) {

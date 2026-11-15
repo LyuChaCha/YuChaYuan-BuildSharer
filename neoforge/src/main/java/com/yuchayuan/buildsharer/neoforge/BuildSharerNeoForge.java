@@ -3,7 +3,7 @@ package com.yuchayuan.buildsharer.neoforge;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.yuchayuan.buildsharer.BuildSharer;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.commands.Commands;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -35,9 +35,6 @@ public final class BuildSharerNeoForge {
             }
         });
         NeoForge.EVENT_BUS.addListener(RegisterClientCommandsEvent.class, event ->
-                event.getDispatcher().register(Commands.literal(BuildSharer.COMMAND).executes(context -> {
-                    BuildSharer.share();
-                    return 1;
-                })));
+                event.getDispatcher().register(BuildSharer.<CommandSourceStack>command()));
     }
 }

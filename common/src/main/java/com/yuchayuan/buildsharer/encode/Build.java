@@ -10,11 +10,13 @@ public record Build(
         int[] skillPoints,
         int level,
         List<Aspect> aspects,
+        List<Integer> tomes,
         AbilityTree tree,
         Set<Integer> abilities) {
 
     public static final int SLOTS = 9;
     public static final int WEAPON = 8;
+    public static final int NO_TOME = -1;
 
     public Build {
         if (equipment.size() != SLOTS) {
@@ -22,6 +24,7 @@ public record Build(
         }
         equipment = List.copyOf(equipment);
         aspects = List.copyOf(aspects);
+        tomes = List.copyOf(tomes);
         abilities = Set.copyOf(abilities);
         skillPoints = skillPoints == null ? null : skillPoints.clone();
     }

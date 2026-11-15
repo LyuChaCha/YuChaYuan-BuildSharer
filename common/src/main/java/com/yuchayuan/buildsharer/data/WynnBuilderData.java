@@ -19,8 +19,10 @@ public final class WynnBuilderData {
 
     public record AspectInfo(int id, int tiers) {}
 
+    public record TomeInfo(int id, String type) {}
+
     public static final List<String> FILES = List.of(
-            "encoding_consts.json", "items.json", "atree.json", "aspects.json", "recipes.json", "ingreds.json");
+            "encoding_consts.json", "items.json", "atree.json", "aspects.json", "recipes.json", "ingreds.json", "tomes.json");
     public static final String MAPPINGS = "translate_mappings.json";
 
     private final String version;
@@ -31,6 +33,7 @@ public final class WynnBuilderData {
     private final Map<String, AbilityTree> trees = new HashMap<>();
     private final Map<String, Map<String, AspectInfo>> aspects = new HashMap<>();
     private final Map<String, String> stats = new HashMap<>();
+    private final Map<String, TomeInfo> tomes = new HashMap<>();
     private final CraftData crafting;
 
     public WynnBuilderData(String version, int versionId, Map<String, String> files) {
@@ -41,6 +44,7 @@ public final class WynnBuilderData {
         readTrees(object(files, "atree.json"));
         readAspects(object(files, "aspects.json"));
         readStats(object(files, MAPPINGS));
+        readTomes(object(files, "tomes.json"));
         this.crafting = new CraftData(object(files, "recipes.json"), JsonParser.parseString(files.get("ingreds.json")));
     }
 
@@ -75,6 +79,10 @@ public final class WynnBuilderData {
     public Optional<AspectInfo> aspect(String className, String name) {
         Map<String, AspectInfo> byName = aspects.get(className);
         return byName == null ? Optional.empty() : Optional.ofNullable(byName.get(loose(name)));
+    }
+
+    public Optional<TomeInfo> tome(String name) {
+        return Optional.ofNullable(tomes.get(loose(name)));
     }
 
     public Optional<String> stat(String apiName) {
@@ -151,6 +159,17 @@ public final class WynnBuilderData {
                         new AspectInfo(aspect.get("id").getAsInt(), tiers == null ? 1 : tiers.size()));
             }
             aspects.put(entry.getKey(), byName);
+        }
+    }
+
+    private void readTomes(JsonObject root) {
+        for (JsonElement element : root.getAsJsonArray("tomes")) {
+            JsonObject tome = element.getAsJsonObject();
+            TomeInfo info = new TomeInfo(tome.get("id").getAsInt(), tome.get("type").getAsString());
+            String name = tome.get("name").getAsString();
+            String display = tome.has("displayName") ? tome.get("displayName").getAsString() : name;
+            tomes.putIfAbsent(loose(display), info);
+            tomes.putIfAbsent(loose(name), info);
         }
     }
 

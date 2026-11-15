@@ -11,9 +11,13 @@ import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.MasteryTomesContainer;
+import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.yuchayuan.buildsharer.share.Snapshot;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,21 +29,29 @@ public final class CharacterReader {
     private static final int[] SKILL_POINT_SLOTS = {11, 12, 13, 14, 15};
     private static final int ASPECT_SLOTS = 5;
     private static final int GAP_TICKS = 3;
+    private static final int TOME_SLOT = 8;
+    private static final String UNLOCKED = "✔";
 
     private CharacterReader() {}
 
-    public static CompletableFuture<Snapshot> read() {
+    public static CompletableFuture<Snapshot> read(boolean includeTomes) {
         CompletableFuture<Snapshot> result = new CompletableFuture<>();
         int[] points = new int[5];
         List<String> abilities = new ArrayList<>();
+        List<String> tomes = new ArrayList<>();
         ContainerUtils.closeBackgroundContainer();
         Managers.TickScheduler.scheduleLater(() -> ScriptedContainerQuery.builder("BuildSharer Skill Points")
                 .onError(message -> result.completeExceptionally(new IllegalStateException(message)))
                 .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT)
                         .expectContainer(CharacterInfoContainer.class)
                         .processIncomingContainer(content -> skillPoints(content, points)))
+                .conditionalThen(content -> includeTomes
+                                && LoreUtils.getStringLore(content.items().get(TOME_SLOT)).contains(UNLOCKED),
+                        QueryStep.clickOnSlot(TOME_SLOT)
+                                .expectContainer(MasteryTomesContainer.class)
+                                .processIncomingContainer(content -> tomes(content, tomes)))
                 .execute(() -> Managers.TickScheduler.scheduleLater(
-                        () -> abilities(result, points, abilities), GAP_TICKS))
+                        () -> abilities(result, points, abilities, tomes), GAP_TICKS))
                 .build()
                 .executeQuery(), GAP_TICKS);
         return result;
@@ -52,13 +64,20 @@ public final class CharacterReader {
         }
     }
 
-    private static void abilities(CompletableFuture<Snapshot> result, int[] points, List<String> abilities) {
+    private static void tomes(ContainerContent content, List<String> tomes) {
+        for (ItemStack stack : content.items()) {
+            Models.Item.asWynnItem(stack, TomeItem.class).ifPresent(tome -> tomes.add(tome.getItemInfo().name()));
+        }
+    }
+
+    private static void abilities(CompletableFuture<Snapshot> result, int[] points, List<String> abilities,
+                                  List<String> tomes) {
         ContainerUtils.closeBackgroundContainer();
         AbilityTreeModel.ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(
                 info -> names(info, abilities),
                 status -> {},
                 error -> result.completeExceptionally(new IllegalStateException(error)),
-                done -> Managers.TickScheduler.scheduleLater(() -> finish(result, points, abilities), GAP_TICKS));
+                done -> Managers.TickScheduler.scheduleLater(() -> finish(result, points, abilities, tomes), GAP_TICKS));
     }
 
     private static void names(AbilityTreeInfo info, List<String> abilities) {
@@ -67,7 +86,8 @@ public final class CharacterReader {
         }
     }
 
-    private static void finish(CompletableFuture<Snapshot> result, int[] points, List<String> abilities) {
+    private static void finish(CompletableFuture<Snapshot> result, int[] points, List<String> abilities,
+                               List<String> tomes) {
         if (result.isDone()) {
             return;
         }
@@ -85,7 +105,7 @@ public final class CharacterReader {
                         Models.Aspect.getAspectTierByName(n).orElse(1))));
             }
             int level = Models.CombatXp.getCombatLevel().current();
-            result.complete(new Snapshot(gear.equipment(), points, level, resolved.getName(), aspects, abilities));
+            result.complete(new Snapshot(gear.equipment(), points, level, resolved.getName(), aspects, abilities, tomes));
         } catch (RuntimeException e) {
             result.completeExceptionally(e);
         }
